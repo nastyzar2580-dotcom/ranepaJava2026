@@ -44,7 +44,6 @@ public class HRMService {
                 .toList();
     }
 
-    // Дополнительно: все методы репозитория (для удобства)
     public Employee save(Employee employee) {
         return repository.save(employee);
     }

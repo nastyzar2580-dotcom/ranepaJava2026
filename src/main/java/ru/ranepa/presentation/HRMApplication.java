@@ -1,7 +1,5 @@
 package ru.ranepa.presentation;
 
-
-
 import ru.ranepa.model.Employee;
 import ru.ranepa.repository.EmployeeRepository;
 import ru.ranepa.service.HRMService;
@@ -27,7 +25,7 @@ public class HRMApplication {
         int choice;
         while (true) {
             showMenu();
-            choice = getIntInput("choose an option: ");
+            choice = getIntInput("Choose an option: ");
 
             switch (choice) {
                 case 1 -> showAllEmployees();
@@ -35,11 +33,12 @@ public class HRMApplication {
                 case 3 -> deleteEmployee();
                 case 4 -> findEmployeeById();
                 case 5 -> showStatistics();
+                case 6 -> findEmployeesByPosition(); // Новая функция!
                 case 0 -> {
-                    System.out.println("GoodBie!");
+                    System.out.println("Goodbye!");
                     return;
                 }
-                default -> System.out.println("incoorect choose! try again.");
+                default -> System.out.println("Incorrect choice! Try again.");
             }
             System.out.println("\n" + "=".repeat(50) + "\n");
         }
@@ -50,18 +49,19 @@ public class HRMApplication {
         System.out.println("1. Show all employees");
         System.out.println("2. Add employee");
         System.out.println("3. Delete employee");
-        System.out.println("4. Find employee ID");
+        System.out.println("4. Find employee by ID");
         System.out.println("5. Show statistics");
+        System.out.println("6. Find employees by position"); // Новое меню
         System.out.println("0. Exit");
     }
 
     private void showAllEmployees() {
         List<Employee> employees = service.findAll();
         if (employees.isEmpty()) {
-            System.out.println("Employee do not found.");
+            System.out.println("No employees found.");
             return;
         }
-        System.out.println("\nList of employee:");
+        System.out.println("\nList of employees:");
         employees.forEach(System.out::println);
     }
 
@@ -93,20 +93,33 @@ public class HRMApplication {
     }
 
     private void deleteEmployee() {
-        Long id = getLongInput("ID employee for delete: ");
+        Long id = getLongInput("Enter employee ID to delete: ");
         if (service.delete(id)) {
-            System.out.println("employee was deleted.");
+            System.out.println("Employee deleted successfully.");
         } else {
-            System.out.println("employee ID " + id + " dont found.");
+            System.out.println("Employee with ID " + id + " not found.");
         }
     }
 
     private void findEmployeeById() {
-        Long id = getLongInput("ID employee: ");
+        Long id = getLongInput("Enter employee ID: ");
         service.findById(id).ifPresentOrElse(
                 System.out::println,
-                () -> System.out.println("Employee ID " + id + " dont found.")
+                () -> System.out.println("Employee with ID " + id + " not found.")
         );
+    }
+
+    private void findEmployeesByPosition() { // Новый метод
+        System.out.print("Enter position: ");
+        String position = scanner.nextLine();
+
+        List<Employee> employees = service.findEmployeesByPosition(position);
+        if (employees.isEmpty()) {
+            System.out.println("No employees found in this position.");
+        } else {
+            System.out.println("\nEmployees in position '" + position + "':");
+            employees.forEach(System.out::println);
+        }
     }
 
     private void showStatistics() {
@@ -114,7 +127,7 @@ public class HRMApplication {
         System.out.println("Average salary: " + avgSalary);
 
         service.findHighestPaidEmployee().ifPresent(emp ->
-                System.out.println("Top-manager: " + emp.getName() + " (" + emp.getSalary() + ")")
+                System.out.println("Top manager: " + emp.getName() + " (" + emp.getSalary() + ")")
         );
     }
 
@@ -124,7 +137,7 @@ public class HRMApplication {
             try {
                 return Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-                System.out.println("input number!");
+                System.out.println("Please input a valid integer!");
             }
         }
     }
@@ -135,7 +148,7 @@ public class HRMApplication {
             try {
                 return Long.parseLong(scanner.nextLine());
             } catch (NumberFormatException e) {
-                System.out.println("Input number!");
+                System.out.println("Please input a valid long value!");
             }
         }
     }
