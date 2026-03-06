@@ -4,21 +4,34 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Employee {
-    private long id;
+    private Long id;
     private String name;
     private String position;
     private BigDecimal salary;
-    private final LocalDate hireDate;
+    private LocalDate hireDate;
 
+    // Конструктор по умолчанию (нужен для репозитория)
+    public Employee() {}
+
+    // Конструктор со всеми полями кроме id
     public Employee(String name, String position, BigDecimal salary, LocalDate hireDate) {
-        id++;
         this.name = name;
         this.position = position;
         this.salary = salary;
         this.hireDate = hireDate;
     }
 
-    public long getId() {
+    // Конструктор со всеми полями
+    public Employee(Long id, String name, String position, BigDecimal salary, LocalDate hireDate) {
+        this.id = id;
+        this.name = name;
+        this.position = position;
+        this.salary = salary;
+        this.hireDate = hireDate;
+    }
+
+    // Геттеры
+    public Long getId() {
         return id;
     }
 
@@ -38,6 +51,11 @@ public class Employee {
         return hireDate;
     }
 
+    // Сеттеры
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -49,13 +67,14 @@ public class Employee {
     public void setSalary(BigDecimal salary) {
         this.salary = salary;
     }
+
+    public void setHireDate(LocalDate hireDate) {
+        this.hireDate = hireDate;
+    }
+
+    @Override
     public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", position='" + position + '\'' +
-                ", salary=" + salary +
-                ", hireDate=" + hireDate +
-                '}';
+        return String.format("Employee{id=%d, name='%s', position='%s', salary=%s, hireDate=%s}",
+                id, name, position, salary, hireDate);
     }
 }
